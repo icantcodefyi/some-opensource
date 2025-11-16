@@ -2,12 +2,12 @@
 
 import * as React from "react";
 import { useEditorSelector } from "platejs/react";
-import { Node } from "slate";
+import { NodeApi } from "platejs";
 
 export function WordCountDisplay() {
 	// Calculate word count reactively
 	const wordCount = useEditorSelector((editor) => {
-		const text = editor.children.map((n) => Node.string(n)).join(" ");
+		const text = editor.children.map((n) => NodeApi.string(n)).join(" ");
 		const words = text.trim().split(/\s+/).filter(Boolean);
 		return words.length > 0 ? words.length : 0;
 	}, []);
@@ -20,4 +20,3 @@ export function WordCountDisplay() {
 		</div>
 	);
 }
-

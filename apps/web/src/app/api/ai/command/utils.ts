@@ -1,10 +1,10 @@
-import type { ChatMessage } from '@/components/editor/use-chat';
-import type { UIMessage } from 'ai';
+import type { ChatMessage } from "@/components/editor/use-chat";
+import type { UIMessage } from "ai";
 
-import { getMarkdown } from '@platejs/ai';
-import { serializeMd } from '@platejs/markdown';
-import dedent from 'dedent';
-import { type SlateEditor, RangeApi } from 'platejs';
+import { getMarkdown } from "@platejs/ai";
+import { serializeMd } from "@platejs/markdown";
+import dedent from "dedent";
+import { type SlateEditor, RangeApi } from "platejs";
 
 /**
  * Tag content split by newlines
@@ -15,9 +15,9 @@ import { type SlateEditor, RangeApi } from 'platejs';
  *   </tools>
  */
 export const tag = (tag: string, content?: string | null) => {
-  if (!content) return '';
+	if (!content) return "";
 
-  return [`<${tag}>`, content, `</${tag}>`].join('\n');
+	return [`<${tag}>`, content, `</${tag}>`].join("\n");
 };
 
 /**
@@ -27,39 +27,39 @@ export const tag = (tag: string, content?: string | null) => {
  *   <tools>{content}</tools>
  */
 export const inlineTag = (tag: string, content?: string | null) => {
-  if (!content) return '';
+	if (!content) return "";
 
-  return [`<${tag}>`, content, `</${tag}>`].join('');
+	return [`<${tag}>`, content, `</${tag}>`].join("");
 };
 
 // Sections split by double newlines
 export const sections = (sections: (boolean | string | null | undefined)[]) => {
-  return sections.filter(Boolean).join('\n\n');
+	return sections.filter(Boolean).join("\n\n");
 };
 
 // List items split by newlines
 export const list = (items: string[] | undefined) => {
-  return items
-    ? items
-        .filter(Boolean)
-        .map((item) => `- ${item}`)
-        .join('\n')
-    : '';
+	return items
+		? items
+				.filter(Boolean)
+				.map((item) => `- ${item}`)
+				.join("\n")
+		: "";
 };
 
 export type StructuredPromptSections = {
-  backgroundData?: string;
-  examples?: string[] | string;
-  history?: string;
-  outputFormatting?: string;
-  prefilledResponse?: string;
-  question?: string;
-  rules?: string;
-  task?: string;
-  taskContext?: string;
-  thinking?: string;
-  tone?: string;
-  tools?: string;
+	backgroundData?: string;
+	examples?: string[] | string;
+	history?: string;
+	outputFormatting?: string;
+	prefilledResponse?: string;
+	question?: string;
+	rules?: string;
+	task?: string;
+	taskContext?: string;
+	thinking?: string;
+	tone?: string;
+	tools?: string;
 };
 
 /**
@@ -90,76 +90,76 @@ export type StructuredPromptSections = {
  *   11. Prefilled response - Optional response starter
  */
 export const buildStructuredPrompt = ({
-  backgroundData,
-  examples,
-  history,
-  outputFormatting,
-  prefilledResponse,
-  question,
-  rules,
-  task,
-  taskContext,
-  thinking,
-  tone,
+	backgroundData,
+	examples,
+	history,
+	outputFormatting,
+	prefilledResponse,
+	question,
+	rules,
+	task,
+	taskContext,
+	thinking,
+	tone,
 }: StructuredPromptSections) => {
-  const formattedExamples = Array.isArray(examples)
-    ? examples.map((example) => tag('example', example)).join('\n')
-    : examples;
+	const formattedExamples = Array.isArray(examples)
+		? examples.map((example) => tag("example", example)).join("\n")
+		: examples;
 
-  const context = sections([
-    taskContext,
-    tone,
+	const context = sections([
+		taskContext,
+		tone,
 
-    backgroundData &&
-      dedent`
+		backgroundData &&
+			dedent`
         Here is the background data you should reference when answering the user:
         <backgroundData>
               ${backgroundData}
         </backgroundData>
       `,
-    rules &&
-      dedent`
+		rules &&
+			dedent`
         Here are some important rules for the interaction:
             ${rules}
       `,
 
-    formattedExamples &&
-      dedent`
+		formattedExamples &&
+			dedent`
         Here are some examples of how to respond in a standard interaction:
-              ${tag('examples', formattedExamples)}
+              ${tag("examples", formattedExamples)}
       `,
 
-    history &&
-      dedent`
+		history &&
+			dedent`
         Here is the conversation history (between the user and you) prior to the question:
-              ${tag('history', history)}
+              ${tag("history", history)}
       `,
 
-    question &&
-      dedent`
+		question &&
+			dedent`
         Here is the user's question:
-              ${tag('question', question)}
+              ${tag("question", question)}
       `,
-  ]);
+	]);
 
-  return sections([
-    tag('context', context),
-    task,
-    // or <reasoningSteps>
-    thinking && tag('thinking', thinking),
-    // Not needed with structured output
-    outputFormatting && tag('outputFormatting', outputFormatting),
-    // Not needed with structured output
-    (prefilledResponse ?? null) !== null &&
-      tag('prefilledResponse', prefilledResponse ?? ''),
-  ]);
+	return sections([
+		tag("context", context),
+		task,
+		// or <reasoningSteps>
+		thinking && tag("thinking", thinking),
+		// Not needed with structured output
+		outputFormatting && tag("outputFormatting", outputFormatting),
+		// Not needed with structured output
+		(prefilledResponse ?? null) !== null &&
+			tag("prefilledResponse", prefilledResponse ?? ""),
+	]);
 };
 
 export function getTextFromMessage(message: UIMessage): string {
-  return message.parts
-    .filter((part) => part.type === 'text')
-    .map((part) => part.text)
-    .join('');
+	return message.parts
+		.filter((part) => part.type === "text")
+		.map((part) => part.text)
+		.join("");
 }
 
 /**
@@ -167,82 +167,82 @@ export function getTextFromMessage(message: UIMessage): string {
  * formats as ROLE: text.
  */
 export function formatTextFromMessages(
-  messages: ChatMessage[],
-  options?: { limit?: number }
+	messages: ChatMessage[],
+	options?: { limit?: number }
 ): string {
-  const historyMessages = options?.limit
-    ? messages.slice(-options.limit)
-    : messages;
+	const historyMessages = options?.limit
+		? messages.slice(-options.limit)
+		: messages;
 
-  return historyMessages
-    .map((message) => {
-      const text = getTextFromMessage(message).trim();
-      if (!text) return null;
-      const role = message.role.toUpperCase();
-      return `${role}: ${text}`;
-    })
-    .filter(Boolean)
-    .join('\n');
+	return historyMessages
+		.map((message) => {
+			const text = getTextFromMessage(message).trim();
+			if (!text) return null;
+			const role = message.role.toUpperCase();
+			return `${role}: ${text}`;
+		})
+		.filter(Boolean)
+		.join("\n");
 }
 
-const SELECTION_START = '<Selection>';
-const SELECTION_END = '</Selection>';
+const SELECTION_START = "<Selection>";
+const SELECTION_END = "</Selection>";
 
 export const addSelection = (editor: SlateEditor) => {
-  if (!editor.selection) return;
-  if (editor.api.isExpanded()) {
-    const [start, end] = RangeApi.edges(editor.selection);
+	if (!editor.selection) return;
+	if (editor.api.isExpanded()) {
+		const [start, end] = RangeApi.edges(editor.selection);
 
-    editor.tf.withoutNormalizing(() => {
-      editor.tf.insertText(SELECTION_END, {
-        at: end,
-      });
+		editor.tf.withoutNormalizing(() => {
+			editor.tf.insertText(SELECTION_END, {
+				at: end,
+			});
 
-      editor.tf.insertText(SELECTION_START, {
-        at: start,
-      });
-    });
-  }
+			editor.tf.insertText(SELECTION_START, {
+				at: start,
+			});
+		});
+	}
 };
 
 const removeEscapeSelection = (editor: SlateEditor, text: string) => {
-  let newText = text
-    .replace(`\\${SELECTION_START}`, SELECTION_START)
-    .replace(`\\${SELECTION_END}`, SELECTION_END);
+	let newText = text
+		.replace(`\\${SELECTION_START}`, SELECTION_START)
+		.replace(`\\${SELECTION_END}`, SELECTION_END);
 
-  // If the selection is on a void element, inserting the placeholder will fail, and the string must be replaced manually.
-  if (!newText.includes(SELECTION_END)) {
-    const [_, end] = RangeApi.edges(editor.selection!);
+	// If the selection is on a void element, inserting the placeholder will fail, and the string must be replaced manually.
+	if (!newText.includes(SELECTION_END)) {
+		const [_, end] = RangeApi.edges(editor.selection!);
 
-    const node = editor.api.block({ at: end.path });
+		const node = editor.api.block({ at: end.path });
 
-    if (!node) return newText;
-    if (editor.api.isVoid(node[0])) {
-      const voidString = serializeMd(editor, { value: [node[0]] });
+		if (!node) return newText;
+		if (editor.api.isVoid(node[0])) {
+			const voidString = serializeMd(editor, { value: [node[0]] });
 
-      const idx = newText.lastIndexOf(voidString);
+			const idx = newText.lastIndexOf(voidString);
 
-      if (idx !== -1) {
-        newText =
-          newText.slice(0, idx) +
-          voidString.trimEnd() +
-          SELECTION_END +
-          newText.slice(idx + voidString.length);
-      }
-    }
-  }
+			if (idx !== -1) {
+				newText =
+					newText.slice(0, idx) +
+					voidString.trimEnd() +
+					SELECTION_END +
+					newText.slice(idx + voidString.length);
+			}
+		}
+	}
 
-  return newText;
+	return newText;
 };
 
 /** Check if the current selection fully covers all top-level blocks. */
 export const isMultiBlocks = (editor: SlateEditor) => {
-  const blocks = editor.api.blocks({ mode: 'highest' });
+	const blocks = editor.api.blocks({ mode: "highest" });
 
-  return blocks.length > 1;
+	return blocks.length > 1;
 };
 
 /** Get markdown with selection markers */
 export const getMarkdownWithSelection = (editor: SlateEditor) => {
-  return removeEscapeSelection(editor, getMarkdown(editor, { type: 'block' }));
+	return removeEscapeSelection(editor, getMarkdown(editor, { type: "block" }));
 };
