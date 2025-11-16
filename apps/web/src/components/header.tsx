@@ -23,9 +23,7 @@ export default function Header() {
 				</Link>
 
 				<Link to="/editor">
-					<Button variant={"default"} className="font-semibold">
-						Start Writing
-					</Button>
+					<Button>Start Writing</Button>
 				</Link>
 			</div>
 		</div>
