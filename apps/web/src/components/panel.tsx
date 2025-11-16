@@ -1,4 +1,4 @@
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "motion/react";
 import { usePanel } from "./panel-provider";
 import { CloseIcon } from "./ui/icons";
 import { cn } from "@/lib/utils";

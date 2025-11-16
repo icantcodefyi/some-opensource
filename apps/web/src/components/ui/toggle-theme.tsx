@@ -2,7 +2,7 @@
 
 import React from "react";
 import { MonitorCogIcon, MoonStarIcon, SunIcon } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import { useTheme } from "next-themes";
 import { cn } from "@/lib/utils";
 

@@ -1,5 +1,6 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { Button } from "./ui/button";
+import { ToggleTheme } from "./ui/toggle-theme";
 
 const HIDDEN_ROUTES = ["/editor", "/login", "sign-up"];
 
@@ -13,8 +14,8 @@ export default function Header() {
 	}
 
 	return (
-		<div className="w-full flex justify-center py-6">
-			<div className="max-w-3xl w-full flex items-center justify-between py-2 px-3 rounded-lg border bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
+		<div className="w-full flex justify-center py-6 bg-background/95">
+			<div className="max-w-3xl w-full flex items-center justify-between py-2 px-3 rounded-lg border bg-card">
 				<Link to="/" className="flex items-center gap-3">
 					<img src="/repaper.svg" alt="Repaper Logo" className="h-8 w-8" />
 					<span className="text-2xl font-serif font-semibold tracking-tight">

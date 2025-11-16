@@ -27,6 +27,7 @@ import {
 	SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { usePanel } from "@/components/panel-provider";
+import { ToggleTheme } from "@/components/ui/toggle-theme";
 
 const data = {
 	user: {
@@ -57,18 +58,18 @@ const data = {
 			icon: Settings2,
 		},
 	],
-	navSecondary: [
-		{
-			title: "Support",
-			url: "#",
-			icon: LifeBuoy,
-		},
-		{
-			title: "Feedback",
-			url: "#",
-			icon: Send,
-		},
-	],
+	// navSecondary: [
+	// 	{
+	// 		title: "Support",
+	// 		url: "#",
+	// 		icon: LifeBuoy,
+	// 	},
+	// 	{
+	// 		title: "Feedback",
+	// 		url: "#",
+	// 		icon: Send,
+	// 	},
+	// ],
 	projects: [
 		{
 			name: "AI Research Paper",
@@ -117,9 +118,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 			<SidebarContent>
 				<NavMain items={data.navMain} onTestPanel={handleOpenTestPanel} />
 				<NavProjects projects={data.projects} />
-				<NavSecondary items={data.navSecondary} className="mt-auto" />
+				{/* <NavSecondary items={data.navSecondary} className="mt-auto" /> */}
 			</SidebarContent>
 			<SidebarFooter>
+				<div className="flex items-center justify-start pb-2">
+					<ToggleTheme />
+				</div>
 				<NavUser user={data.user} />
 			</SidebarFooter>
 		</Sidebar>

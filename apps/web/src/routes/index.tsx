@@ -7,7 +7,7 @@ export const Route = createFileRoute("/")({
 
 function HomeComponent() {
 	return (
-		<div className="flex flex-col">
+		<div className="flex flex-col bg-background/95">
 			{/* Hero Section */}
 			<section className="flex flex-1 items-center justify-center px-4 py-16">
 				<div className="mx-auto max-w-5xl text-center">
